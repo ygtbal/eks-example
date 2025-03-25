@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eks-node-app
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: eks-node-app
+        tier: backend
+    spec:
+      containers:
+        - name: eks-node
+          image: 445944/eks-node-repo
