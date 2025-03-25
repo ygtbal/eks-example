@@ -1,0 +1,31 @@
+version: "3.8"
+services:
+  db:
+    image: "postgres"
+    container_name: eks-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=YBALALA
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=eksnode
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./eks-backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+  backend:
+    build:
+      context: ./eks-backend
+      dockerfile: Dockerfile
+    container_name: eks-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./eks-backend:/app
+      - /app/node_modules
+    env_file:
+      - ./eks-backend/.env
+    depends_on:
+      - db
+volumes:
+  pgdata:
